@@ -1,43 +1,53 @@
-const requestQueue = require("../models/requestQueue");
 const redisClient = require("../models/redisClient");
+const processMessage = require("../shared/processMessage")
+const whatsappService = require("../services/whatsappService");
 
-/*const addJob = async (req, res) => {
-    const { jobData } = req.body;
-    
-    if (!jobData) return res.status(400).json({ error: "Faltan datos" });
-
-    const job = await requestQueue.add(jobData);
-    res.json({ message: "Tarea añadida", jobId: job.id });
-};*/
+const {SampleButtons} = require("../shared/sampleModels");
 
 const processJob = async (job) => {
-    console.log(`Procesando tarea ID: ${job.id}, Datos:`, job.data);
-
-    // Simulación de procesamiento (espera 3 segundos)
-    await new Promise((resolve) => setTimeout(resolve, 10000));
-
-    console.log(`Tarea ${job.id} completada`);
+        
+    if(job.data){
+        const { data } = job;    
+        if(data){ 
+            if(data.type == "in" && data.content){
+                const messages = data.content[0];                
+                var text = processMessage.GetTextUser(messages);
+                var number = messages["from"];                
+                if(text!=""){                    
+                    await processMessage.Process(text,number);            
+                }
+            }else if(data.type == "out" && data.content){
+                const messages = data.content;    
+                await Promise.resolve(whatsappService.SendMessageWhatsApp(messages));
+                
+                
+                if(data.delay>0){
+                    await new Promise((resolve) => setTimeout(resolve, data.delay));
+                }      
+                
+                whatsappService.SendMessageWhatsApp(SampleButtons(50683453485))
+                
+            }   
+             
+            
+        }
+    }
     return { status: "completado" };
 };
 
 const onJobCompleted = async (job) => {
     const { data } = job;    
     if(data){        
-        console.log(`Trabajo completado, eliminando el registro de Redis para: ${data.mensaje}`);
         // Elimina el trabajo de Redis
-        await redisClient.del(`job:${data.mensaje}`);  // Ajusta la clave según lo que almacenes
-        console.log(`Registro de Redis eliminado para: ${data.mensaje}`);
-
+        await redisClient.del(`job:${job.id}`);  // Ajusta la clave según lo que almacenes
+        
         // También elimina el trabajo de la cola si es necesario
         await job.remove();
-        console.log(`Trabajo eliminado de la cola`);
-
-        console.log(await redisClient.get("bull:requestQueue:id"))
     }
 };
 
 const onJobFailed = (job, err) => {
-    console.error(`Error en la tarea ${job.id}:`, err);
+    console.error(`********** Error en la tarea ${job.id}:`, err);
 };
 
 module.exports = {
