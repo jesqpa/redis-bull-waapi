@@ -10,22 +10,25 @@ const processJob = async (job) => {
         const { data } = job;    
         if(data){ 
             if(data.type == "in" && data.content){
-                const messages = data.content[0];                
+                const messages = data.content[0];     
+                const line_number = data.line_number;           
                 var text = processMessage.GetTextUser(messages);
                 var number = messages["from"];                
                 if(text!=""){                    
-                    await processMessage.Process(text,number);            
+                    await processMessage.Process(text,line_number,number);            
                 }
             }else if(data.type == "out" && data.content){
                 const messages = data.content;    
-                await Promise.resolve(whatsappService.SendMessageWhatsApp(messages));
+                const line_number = data.line_number;
+                await Promise.resolve(whatsappService.SendMessageWhatsApp(line_number,messages));
                 
                 
                 if(data.delay>0){
-                    await new Promise((resolve) => setTimeout(resolve, data.delay));
-                }      
-                
-                whatsappService.SendMessageWhatsApp(SampleButtons(50683453485))
+                    await delay(data.delay)
+                }
+
+                await delay(2);                
+                whatsappService.SendMessageWhatsApp(line_number,SampleButtons(50683453485))
                 
             }   
              
@@ -34,6 +37,10 @@ const processJob = async (job) => {
     }
     return { status: "completado" };
 };
+
+const delay = async(seconds) => {
+    await new Promise((resolve) => setTimeout(resolve, seconds*1000));
+}
 
 const onJobCompleted = async (job) => {
     const { data } = job;    

@@ -29,13 +29,20 @@ const ReceivedMessage = async(req,res) => {
         var id = entry["id"];
         var changes = (entry["changes"])[0];
         var value = changes["value"];
+        var line_number = changes.value.metadata.phone_number_id;
+
+        
         
         var statusesObject = value["statuses"];
-        var messageObject = {id,"type":"in","content":value["messages"]};
+        var messageObject = {id,"type":"in",line_number,"content":value["messages"]};
         
         if(typeof statusesObject != "undefined"){
             //----Para procesar los estados sent y read
         }else if(typeof messageObject != "undefined"){ 
+
+            console.log("****************")
+            console.log((line_number))
+            console.log("****************")
              
             Logger(id+"-"+value["messages"][0]["from"],value["messages"]) 
 

@@ -5,7 +5,7 @@ const whatsappModel = require("../shared/whatsappModels");
 const requestQueue = require("../models/requestQueue");
 const redisClient = require("../models/redisClient");
 
-async function Process(textUser, number){ 
+async function Process(textUser, line_number, number){ 
     textUser = textUser.toLowerCase();
     var models = [];    
 
@@ -22,16 +22,12 @@ async function Process(textUser, number){
         console.log([...modelsant,"bienvenida"])
     }else if(modelsant.length==1){
         var model = whatsappModel.MessageText("Así le gusta a la gente!!",number);
-        models.push(model);        
+        models.push(model);                
 
         //await redisClient.set(`flujo:${number}`,JSON.stringify([...modelsant,"agradecimiento"]));
         await redisClient.del(`flujo:${number}`);
 
-    }
-
-    
-
-    
+    }    
 
     /*if(textUser.includes("hola")){
         //Saludar
@@ -64,10 +60,10 @@ async function Process(textUser, number){
 
     await redisClient.set(`flujo:${number}`,[...modelsant,models]);*/
     
-    var delay = (models.length > 1) ? 100 : 0;
+    var delay = (models.length > 1) ? 3 : 0;
 
     models.forEach(model => {
-        var messageObject = {"type":"out","content":model,"delay":delay};        
+        var messageObject = {"type":"out",line_number,"content":model,delay};        
         Promise.resolve(agrega_cola(messageObject));        
     });    
     

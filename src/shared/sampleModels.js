@@ -1,30 +1,4 @@
-/*
-const fin = { mensaje: "Gracias por contactarnos. ¡Hasta luego!" };
 
-const confirmar_pedido = {
-  mensaje: "Tu pedido está en camino. ¿Necesitas más ayuda?",
-  opciones: [
-    { texto: "Sí", siguiente: null },
-    { texto: "No, gracias", siguiente: fin }
-  ]
-};
-
-const consulta_pedido = {
-  mensaje: "Por favor, ingresa tu número de pedido.",
-  tipo: "entrada",
-  siguiente: confirmar_pedido
-};
-
-const soporte = { mensaje: "Conectándote con un agente...", siguiente: fin };
-
-const inicio = {
-  mensaje: "Hola, ¿cómo puedo ayudarte?",
-  opciones: [
-    { texto: "Consultar mi pedido", siguiente: consulta_pedido },
-    { texto: "Hablar con soporte", siguiente: soporte }
-  ]
-};
-*/
 
 function SampleText(textResponse, number){
     

@@ -1,11 +1,11 @@
 const { application } = require("express");
 const https = require("https");
 
-function SendMessageWhatsApp(data){
+function SendMessageWhatsApp(line,data){
     
     const options = {
         host: "graph.facebook.com",
-        path: "/v15.0/"+process.env.WAP_ID_NUMBER+"/messages",
+        path: "/v15.0/"+line+"/messages",
         method: "POST",
         body:data,
         headers: {
