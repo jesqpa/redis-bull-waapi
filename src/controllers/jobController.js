@@ -2,7 +2,7 @@ const redisClient = require("../models/redisClient");
 const processMessage = require("../shared/processMessage")
 const whatsappService = require("../services/whatsappService");
 
-const {SampleButtons} = require("../shared/sampleModels");
+const {SampleButtons,SampleList} = require("../shared/sampleModels");
 
 const processJob = async (job) => {
         
@@ -29,6 +29,8 @@ const processJob = async (job) => {
 
                 await delay(2);                
                 whatsappService.SendMessageWhatsApp(line_number,SampleButtons(50683453485))
+                whatsappService.SendMessageWhatsApp(line_number,SampleList(50683453485))
+                
                 
             }   
              
