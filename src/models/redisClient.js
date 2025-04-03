@@ -6,6 +6,6 @@ const Redis = require("ioredis");
     password: process.env.REDIS_PASSWORD,
 });*/
 
-const redisClient = new Redis(/*process.env.REDIS_URL || */"redis://redis.railway.internal:6379");
+const redisClient = new Redis(/*process.env.REDIS_URL || */"redis://redis1.railway.internal:6379");
 
 module.exports = redisClient;
