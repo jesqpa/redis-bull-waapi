@@ -29,6 +29,8 @@ const processJob = async (job) => {
 
                 await delay(2);                
                 whatsappService.SendMessageWhatsApp(line_number,SampleButtons(50683453485))
+
+                await delay(2); 
                 whatsappService.SendMessageWhatsApp(line_number,SampleList(50683453485))
                 
                 
