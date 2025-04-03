@@ -10,9 +10,7 @@ async function Process(textUser, line_number, number){
     var models = [];    
 
     var modelsant = await redisClient.get(`flujo:${number}`)
-    modelsant = (modelsant == null) ? [] : JSON.parse(modelsant);
-
-    console.log(modelsant)
+    modelsant = (modelsant == null) ? [] : JSON.parse(modelsant);    
 
     if(modelsant.length==0){
         var model = whatsappModel.MessageText("Hola, bienvenido al asistente de compra Productos Tostados La Nena!!",number);
